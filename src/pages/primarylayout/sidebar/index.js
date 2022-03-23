@@ -1,16 +1,17 @@
 import React, {Component} from "react";
-// import { createBrowserHistory } from 'history';
+import { createBrowserHistory } from 'history';
 import {withRouter, Link} from 'react-router-dom';
 import {
     Layout,
     Menu,
-    Avatar,
-    // Icon
+    Avatar
 } from 'antd';
+import { Icon } from '@ant-design/compatible';
+import './index.less';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
-// const history = createBrowserHistory();
+const history = createBrowserHistory();
 
 class SideBar extends Component {
     constructor(props) {
@@ -54,12 +55,28 @@ class SideBar extends Component {
                 // {type: 'menu', path: '/receivecustomermanage', icon: 'usergroup-add', name: '获客管理'},
                 {type: 'menu', path: '/authoritymanage', icon: 'control', name: '权限管理'},
             ],
-            openKeys: ["/usermanage"],  //当前选中的SubMenu
-            defaultOpenKeys: ["/usermanage"], //初始化菜单组件的SubMenu
-            defaultSelectedKeys: ["/usermanage/admin"] //初始化默认选中的MenuItem
+            openKeys: ['/usermanage'],  //当前选中的SubMenu
+            defaultOpenKeys: ['/usermanage'], //初始化菜单组件的SubMenu
+            defaultSelectedKeys:  ['/usermanage/admin']//初始化默认选中的MenuItem
         }
-
     }
+    componentDidMount() {
+        // this.setState({defaultSelectedKeys: props.location.pathname})
+
+        const arr = history.location.pathname.split('/')
+        const defaultOpenKeys = arr[1] ? [`/${arr[1]}`] : this.state.defaultOpenKeys
+        const defaultSelectedKeys = arr[2] ? [`${history.location.pathname}`] : this.state.defaultSelectedKeys
+        console.log(defaultSelectedKeys, 'defaultSelectedKeys')
+
+        this.setState((state, props) => ({
+            defaultOpenKeys: defaultOpenKeys,
+            openKeys: defaultOpenKeys,
+            defaultSelectedKeys: defaultSelectedKeys
+        }))
+
+        this.props.history.push(defaultSelectedKeys[0])
+    }
+
     onCollapse = collapsed => {
         this.setState({collapsed})
     }
@@ -96,13 +113,16 @@ class SideBar extends Component {
                         this.state.subMenus.map((subMenu) => (
                             <SubMenu key={subMenu.path} title={
                                 <span>
+                                    <Icon type={subMenu.icon}/>
                                     <span>{subMenu.name}</span>
                                 </span>
                             }>
                                 {
                                     subMenu.menuitems.map(menuitem => (
                                         <Menu.Item key={`${subMenu.path}${menuitem.path}`}>
-                                            {menuitem.name}
+                                            <span>
+                                                <Link to={`${subMenu.path}${menuitem.path}`}>{menuitem.name}</Link>
+                                            </span>
                                         </Menu.Item>
                                     ))
                                 }
@@ -113,6 +133,7 @@ class SideBar extends Component {
                     {
                         this.state.menus.map(menu => (
                             <Menu.Item key={menu.path}>
+                                <Icon type={menu.icon} />
                                 <span>
                                     <Link to={menu.path}>{menu.name}</Link>
                                 </span>

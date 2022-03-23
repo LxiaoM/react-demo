@@ -10,7 +10,7 @@ import {createBrowserHistory} from 'history';
 import Login from '../src/pages/login';
 import PrimaryLayout from '../src/pages/primarylayout';
 // import './index.less';
-import 'antd/dist/antd.css'
+// import 'antd/dist/antd.css'
 
 
 const history = createBrowserHistory();
@@ -22,7 +22,7 @@ ReactDOM.render(
             {/*    登录页面*/}
             <Route path="/login" component={Login}></Route>
             {/* 使用路由的钩子函数 */}
-                <Route path="/" component={PrimaryLayout}/>
+            <Route path="/" component={PrimaryLayout}/>
         </Router>,
     // </Provider>,
     document.getElementById('root')
